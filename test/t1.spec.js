@@ -2,7 +2,7 @@ const { Builder, By, until, Options } = require('./config');
 
 const firefox =  new Builder()
 .forBrowser('firefox')
-.usingServer('http://localhost:4444/wd/hub')
+.usingServer('http://192.168.10.94:4444/wd/hub')
 .withCapabilities({
   browserName: 'firefox',
   webStorageEnabled: false,
@@ -13,7 +13,7 @@ const firefox =  new Builder()
 
 const chrome = new Builder()
   .forBrowser('chrome')
-  .usingServer('http://localhost:4444/wd/hub')
+  .usingServer('http://192.168.10.94:4444/wd/hub')
   .withCapabilities({
     browserName: 'chrome',
     webStorageEnabled: false,
@@ -39,7 +39,8 @@ const chrome = new Builder()
   .build();
 
 describe('t1', () => {
-  before(async () => {
+  beforeAll(async () => {
+    await jest.setTimeout(200000);
     await chrome.get('https://google.com');
     await firefox.get('https://www.seleniumeasy.com/test/basic-radiobutton-demo.html');
   });
@@ -87,7 +88,7 @@ describe('t1', () => {
       .click();
   });
 
-  after( async done => {
+  afterAll( async done => {
     await done();
     await chrome.quit();
     await firefox.quit();
