@@ -1,0 +1,16 @@
+{
+  "name": "cheSel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha --timeout 20000"
+  },
+  "dependencies": {
+    "mocha": "^6.0.0",
+    "selenium-webdriver": "^4.0.0-alpha.1"
+  },
+  "devDependencies": {
+    "geckodriver": "^1.15.1"
+  }
+}
