@@ -1,5 +1,6 @@
 const { Builder, By, until, Options } = require('./config');
 
+
 const chrome = new Builder()
   .forBrowser('chrome')
   .usingServer('http://localhost:4444/wd/hub')
@@ -10,31 +11,40 @@ const chrome = new Builder()
     screenResolution: '640x480'
   })
   .setChromeOptions(new Options().addArguments([
+    '--headless',
     '--fast',
-    '--no-sandbox',
+    '--prerender',
     '--fast-start',
-    '--disable-gpu',
+    '--no-sandbox',
     '--disable-cache',
+    '--use-gpu-in-tests',
     '--disable-icon-ntp',
     '--disk-cache-size=0',
+    '--enable-multiprocess',
+    '--disable-default-apps',
+    '--disable-remote-fonts',
     '--disable-ntp-favicons',
     '--disable-logging-redirect',
     '--aggressive-cache-discard',
     '--disable-bundled-ppapi-flash',
     '--disable-cached-picture-raster',
+    '--disable-renderer-accessibility',
     '--disable-offline-load-stale-cache',
+    '--use-gpu-memory-buffers-for-capture',
     'proxy=null',
     'pageLoadStrategy=eager',
   ]))
   .build();
 
-jest.setTimeout(200000);
+jest.setTimeout(200000)
 
 describe('t1', () => {
-  beforeAll(async () => await chrome.get('https://google.com'));
+  beforeAll(async () => {
+    await chrome.get('https://google.com');
+  });
 
   it('google', async () => {
-    await chrome.findElement(By.name('q'))
+    await chrome.wait(until.elementLocated(By.name('q')), 0.1)
       .sendKeys('golang');
 
     await chrome.wait(until
@@ -45,34 +55,9 @@ describe('t1', () => {
     await chrome.findElement(By.className('LC20lb'))
       .click();
 
-    await chrome.findElement(By.tagName('select'))
-      .click();
-
-    await chrome.findElement(By
-      .css('option[value="peano.go"]'))
-      .click();
-
-    await chrome.findElement(By.tagName('body'))
-      .click();
-
     await chrome.wait(until
       .elementLocated(By
-        .css('div.container div.left:nth-child(2) div:nth-child(1) div.buttons > a.run')), 0.1)
-      .click();
-  });
-
-  it('t2', async () => {
-    await chrome.get('https://www.seleniumeasy.com/test/basic-radiobutton-demo.html');
-    await chrome.findElement(By.css('input[value="Male"]'))
-      .click();
-
-    await chrome.findElement(By.id('buttoncheck')).click();
-    await until.elementTextContains(chrome
-      .findElement(By
-        .className('radiobutton')), 'Radio button is Not checked');
-
-    await chrome.findElement(By
-      .css('div.panel.panel-default:nth-child(5) div.panel-body > button.btn.btn-default:nth-child(5)'))
+        .css('div.container div.left:nth-child(2) div:nth-child(1) div.buttons > a.run')), 0.2)
       .click();
   });
 
