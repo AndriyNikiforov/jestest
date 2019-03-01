@@ -11,7 +11,7 @@ const chrome = new Builder()
     screenResolution: '640x480'
   })
   .setChromeOptions(new Options().addArguments([
-    '--headless',
+    // '--headless',
     '--fast',
     '--prerender',
     '--fast-start',
