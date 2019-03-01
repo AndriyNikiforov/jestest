@@ -1,4 +1,4 @@
-const { Builder, By, until, Options } = require('./config');
+const { Builder, By, Key, until, Options } = require('./config');
 
 
 const chrome = new Builder()
@@ -11,7 +11,7 @@ const chrome = new Builder()
     screenResolution: '640x480'
   })
   .setChromeOptions(new Options().addArguments([
-    // '--headless',
+    '--headless',
     '--fast',
     '--prerender',
     '--fast-start',
@@ -36,14 +36,12 @@ const chrome = new Builder()
   ]))
   .build();
 
-jest.setTimeout(200000)
+jest.setTimeout(90000)
 
-describe('t1', () => {
-  beforeAll(async () => {
-    await chrome.get('https://google.com');
-  });
+describe.only('t1', () => {
+  beforeAll(async () => await chrome.get('https://google.com'));
 
-  it('google', async () => {
+  it.only('google', async () => {
     await chrome.wait(until.elementLocated(By.name('q')), 0.1)
       .sendKeys('golang');
 
@@ -59,9 +57,18 @@ describe('t1', () => {
       .elementLocated(By
         .css('div.container div.left:nth-child(2) div:nth-child(1) div.buttons > a.run')), 0.2)
       .click();
+
+    await chrome.findElement(By.linkText('Packages'))
+      .click();
+    
+    const actions = chrome.actions();
+
+    await actions
+      .sendKeys(Key.PAGE_DOWN)
+      .perform();
   });
 
-  afterAll( async done => {
+  afterAll(async done => {
     await done();
     await chrome.quit();
   });
